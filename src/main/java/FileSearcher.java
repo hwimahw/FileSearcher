@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 
 public class FileSearcher {
     public static void main(String[] args) {
-        String path = "./src/main/resources";
+        String path = "src/main/resources";
        Map<File, String> filesAndPathes =  findFiles(path, args);
        printDataFiles(filesAndPathes);
     }
@@ -45,13 +45,18 @@ public class FileSearcher {
     }
 
     public static void printDataFiles(Map<File, String> filesAndPath){
-        System.out.printf("%10s%10s%10s%n", "Name:", "Size:", "Path:");
+        System.out.printf("%10s%10s%12s%55s%n", "Name:", "Size:", "Type", "Path:");
         File file;
         String path;
-        for(Map.Entry<File, String> entry : filesAndPath.entrySet()){
+        for(Map.Entry<File, String> entry : filesAndPath.entrySet()) {
             file = entry.getKey();
             path = entry.getValue();
-            System.out.printf("%10s%10s%33s%n",file.getName(), file.length(), path);
+            if (file.isDirectory()) {
+                System.out.printf("%10s%10s%12s%80s%n", file.getName(), file.length(), "directory", file.getAbsolutePath());
+
+            } else {
+                System.out.printf("%10s%10s%12s%80s%n", file.getName(), file.length(), "file", file.getAbsolutePath());
+            }
         }
     }
 }
