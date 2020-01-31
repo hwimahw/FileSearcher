@@ -1,11 +1,15 @@
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.spi.FileTypeDetector;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FileSearcher {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         String path = "src/main/resources";
        Map<File, String> filesAndPathes =  findFiles(path, args);
        printDataFiles(filesAndPathes);
@@ -44,19 +48,14 @@ public class FileSearcher {
         return false;
     }
 
-    public static void printDataFiles(Map<File, String> filesAndPath){
-        System.out.printf("%10s%10s%12s%55s%n", "Name:", "Size:", "Type", "Path:");
+    public static void printDataFiles(Map<File, String> filesAndPath) throws Exception{
+        System.out.printf("%20s%30s%12s%55s%n", "Name:", "Size:", "Type", "Path:");
         File file;
-        String path;
         for(Map.Entry<File, String> entry : filesAndPath.entrySet()) {
             file = entry.getKey();
-            path = entry.getValue();
-            if (file.isDirectory()) {
-                System.out.printf("%10s%10s%12s%80s%n", file.getName(), file.length(), "directory", file.getAbsolutePath());
+            Path path = Paths.get(file.getPath());
+            System.out.printf("%30s%20s%20s%90s%n", file.getName(), file.length(), Files.probeContentType(path), file.getAbsolutePath());
 
-            } else {
-                System.out.printf("%10s%10s%12s%80s%n", file.getName(), file.length(), "file", file.getAbsolutePath());
-            }
         }
     }
 }
